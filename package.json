@@ -1,0 +1,22 @@
+{
+  "name": "deadpeople",
+  "version": "1.0.0",
+  "description": "## CPSC 376 Digital Humanities FInal Project ### Claire, Elle, Michaela, Shea",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sketsdever/deadpeople.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sketsdever/deadpeople/issues"
+  },
+  "homepage": "https://github.com/sketsdever/deadpeople#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
