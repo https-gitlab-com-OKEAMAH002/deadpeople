@@ -1,4 +1,4 @@
 # deadpeople
 
-## CPSC 376 Digital Humanities FInal Project
-### Claire, Elle, Michaela, Shea
+### CPSC 376 Digital Humanities Final Project
+Claire, Elle, Michaela, Shea
