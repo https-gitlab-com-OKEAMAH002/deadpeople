@@ -18,6 +18,7 @@
   "homepage": "https://github.com/sketsdever/deadpeople#readme",
   "dependencies": {
     "express": "^4.16.4",
+    "path": "^0.12.7",
     "pg": "^7.6.1"
   }
 }

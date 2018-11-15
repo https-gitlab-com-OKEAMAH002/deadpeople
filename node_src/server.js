@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-app.use(express.static('./')); //so that root displays index.html
+const path = require('path');
 app.use(express.json());
 
 dburl = process.env.DATABASE_URL || "<DB_URI>";
@@ -12,7 +12,12 @@ const pool = new Pool({
 });
 
 app.get('/', (request, response) => {
+	response.sendFile(path.resolve(__dirname + '/../vue_src/dist/index.html'));
 });
+
+app.use(express.static('../vue_src/dist/')); //so that root displays index.html
+app.use("/js", express.static('../vue_src/dist/js'));
+app.use("/css", express.static('../vue_src/dist/css'));
 
 // ADMIN ONLY -- ONE-TIME INITIALIZATION OF TABLES IN DATABASE
 app.get('/db-init-tables', async (req, res) => {
