@@ -3,7 +3,7 @@ const app = express();
 app.use(express.static('./')); //so that root displays index.html
 app.use(express.json());
 
-dburl = process.env.DATABASE_URL || "<DB_URI>";
+dburl = process.env.DATABASE_URL || "postgres://tfggtadleqgrsr:adbd5dcd5cdd20c18c1e7000cd120c08838985f31301a49c599b1b7bf3aa61a0@ec2-23-23-153-145.compute-1.amazonaws.com:5432/d8099ub0oseafu";
 
 const { Pool } = require('pg');
 const pool = new Pool({
@@ -17,7 +17,7 @@ app.get('/', (request, response) => {
 // ADMIN ONLY -- ONE-TIME INITIALIZATION OF TABLES IN DATABASE
 app.get('/db-init-tables', async (req, res) => {
 	try {
-		const client = await pool.connect()
+		const client = await pool.connect();
 		await client.query('CREATE TABLE objects(object_id SERIAL PRIMARY KEY, type VARCHAR(40), location VARCHAR(40));');
 		await client.query('CREATE TABLE graves(object_id INTEGER PRIMARY KEY, last_name VARCHAR(40), first_name VARCHAR(40), middle_name VARCHAR(40), date_of_birth DATE, date_of_death DATE, date_of_burrial DATE, is_notable BOOLEAN);');
 		await client.query('CREATE TABLE landmarks(object_id INTEGER PRIMARY KEY, description VARCHAR(500), has_photos BOOLEAN);');
@@ -32,7 +32,7 @@ app.get('/db-init-tables', async (req, res) => {
 // ADMIN ONLY -- PERMANENTLY DELETE ONE OF THE TABLES
 app.get(RegExp('/db-delete-table/(objects|graves|landmarks)'), async (req, res) => {
 	try {
-		const client = await pool.connect()
+		const client = await pool.connect();
 		await client.query('DROP TABLE ' + req.originalUrl.substring(String("/db-delete-table/").length) + ';');
 		client.release();
 		console.log("Deleted table: ", req.originalUrl.substring(String("/db-delete-table/").length));
@@ -42,9 +42,47 @@ app.get(RegExp('/db-delete-table/(objects|graves|landmarks)'), async (req, res) 
     }
 });
 
+app.get('/db-add-object', async (req, res) => {
+	try {
+		const client = await pool.connect();
+		await client.query('INSERT INTO objects(object_id, type, location) VALUES(DEFAULT, \'' + req.query.type + '\', \'' + req.query.location + '\');');		
+		client.release();
+		console.log("Added object for query: ", req.query);
+    } catch (err) {
+      console.error(err);
+      res.send("Error " + err);
+    }
+});
+
+app.get('/db-delete-object', async (req, res) => {
+	try {
+		const client = await pool.connect();
+		await client.query('DELETE FROM objects WHERE location=\'' + req.query.location + '\' AND type=\'' + req.query.type + '\';');		
+		client.release();
+		console.log("Deleted object for query: ", req.query);
+    } catch (err) {
+      console.error(err);
+      res.send("Error " + err);
+    }
+});
+
+app.get('/db-view-objects', async (req, res) => {
+	try {
+		const client = await pool.connect();
+		let query = await client.query('SELECT * FROM objects;');
+		console.log("Current objects: ", query.rows);
+		client.release();
+    } catch (err) {
+      console.error(err);
+      res.send("Error " + err);
+    }
+});
+
+// TESTING
+
 app.get('/db-test-create', async (req, res) => {
 	try {
-		const client = await pool.connect()
+		const client = await pool.connect();
 		await client.query('CREATE TABLE test_table(id SERIAL PRIMARY KEY, name VARCHAR(40));');
 		await client.query('INSERT INTO test_table VALUES(1, \'hello\');');
 		client.release();
@@ -57,7 +95,7 @@ app.get('/db-test-create', async (req, res) => {
 
 app.get('/db-test-log', async (req, res) => {
 	try {
-		const client = await pool.connect()
+		const client = await pool.connect();
 		const result = await client.query('SELECT * FROM test_table;');
 		console.log("logging test_table: ", result);
 		client.release();
@@ -69,7 +107,7 @@ app.get('/db-test-log', async (req, res) => {
 
 app.get('/db-test-delete', async (req, res) => {
 	try {
-		const client = await pool.connect()
+		const client = await pool.connect();
 		const query = await client.query('DROP TABLE test_table;');
 		client.release();
 		console.log("deleted test_table");

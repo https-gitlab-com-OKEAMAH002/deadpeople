@@ -1,9 +1,22 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <title>Grove St. Cemetery</title>
+	<title>Grove St. Cemetery</title>
 </head>
 <body>
-  <p>Hello, New Haven!</p>
+	<p>Hello, New Haven!</p>
+	<p>ADD AND REMOVE OBJECTS FROM DATABASE:
+		<p>Type ("Grave" or "Landmark"):
+			<input type="search" placeholder="Enter the type" id="objectTypeInput">
+		</p>
+		<p>Location (Address format eg. "24 Birch St."):
+			<input type="search" placeholder="Enter the location" id="objectLocationInput">
+		</p>
+		<p>
+			<button onclick="onClickAddObject()">Add object to database.</button>
+			<button onclick="onClickDeleteObject()">Delete object from database.</button>
+        </p>
+	</p>
+	<script src="./script.js"></script>
 </body>
 </html>
