@@ -1,4 +1,4 @@
-let PATH = "https://deadpeople.herokuapp.com/"; // "http://localhost:3000/";
+let PATH =  "http://localhost:3000/"; // "https://deadpeople.herokuapp.com/";
 
 async function onClickAddObject() {
 	let params = {
