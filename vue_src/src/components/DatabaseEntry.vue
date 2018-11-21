@@ -17,7 +17,7 @@ export default {
     name: 'DatabaseEntry',
     data() {
         return {
-            PATH: "https://deadpeople.herokuapp.com/", // "http://localhost:3000/"
+            PATH: "http://localhost:3000/", // "https://deadpeople.herokuapp.com/"
             objectType: "",
             objectLocation: "",
         }
