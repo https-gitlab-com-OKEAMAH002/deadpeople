@@ -49,12 +49,15 @@ app.get(RegExp('/db-delete-table/(objects|graves|landmarks)'), async (req, res) 
     }
 });
 
-app.get('/db-add-object', async (req, res) => {
+app.get('/db-add-grave', async (req, res) => {
 	try {
 		const client = await pool.connect();
-		await client.query('INSERT INTO objects(object_id, type, location) VALUES(DEFAULT, \'' + req.query.type + '\', \'' + req.query.location + '\');');		
+		await client.query('INSERT INTO objects(object_id, type, location) VALUES(DEFAULT, \'' + req.query.type + '\', \'' + req.query.location + '\');');
+		let result = await client.query('SELECT object_id FROM objects WHERE location=\'' + req.query.location + '\' AND type=\'' + req.query.type + '\';');
+		objectId = result.rows[0].object_id;
+		await client.query('INSERT INTO graves(object_id, last_name, first_name, middle_name, date_of_birth, date_of_death, date_of_burrial) VALUES(' + objectId + ', \'' + req.query.lastName + '\', \'' + req.query.firstName + '\', \'' + req.query.middleName + '\', \'' + req.query.DOBirth + '\', \'' + req.query.DODeath + '\', \'' + req.query.DOBurial + '\');');
 		client.release();
-		console.log("Added object for query: ", req.query);
+		console.log("Added grave for query: ", req.query);
 		res.redirect("/");
     } catch (err) {
       console.error(err);
@@ -62,12 +65,15 @@ app.get('/db-add-object', async (req, res) => {
     }
 });
 
-app.get('/db-delete-object', async (req, res) => {
+app.get('/db-add-landmark', async (req, res) => {
 	try {
 		const client = await pool.connect();
-		await client.query('DELETE FROM objects WHERE location=\'' + req.query.location + '\' AND type=\'' + req.query.type + '\';');		
+		await client.query('INSERT INTO objects(object_id, type, location) VALUES(DEFAULT, \'' + req.query.type + '\', \'' + req.query.location + '\');');
+		let result = await client.query('SELECT object_id FROM objects WHERE location=\'' + req.query.location + '\' AND type=\'' + req.query.type + '\';');
+		objectId = result.rows[0].object_id;
+		await client.query('INSERT INTO landmarks(object_id, description, has_photos) VALUES('+ objectId +', \'' + req.query.description + '\', \'' + req.query.hasPhotos + '\');');
 		client.release();
-		console.log("Deleted object for query: ", req.query);
+		console.log("Added landmark for query: ", req.query);
 		res.redirect("/");
     } catch (err) {
       console.error(err);
@@ -81,6 +87,26 @@ app.get('/db-view-objects', async (req, res) => {
 		let query = await client.query('SELECT * FROM objects;');
 		console.log("Current objects: ", query.rows);
 		client.release();
+		res.redirect("/");
+    } catch (err) {
+      console.error(err);
+      res.send("Error " + err);
+    }
+});
+
+app.get('/db-delete-object', async (req, res) => {
+	try {
+		const client = await pool.connect();
+		let result = await client.query('SELECT object_id FROM objects WHERE location=\'' + req.query.location + '\' AND type=\'' + req.query.type + '\';');
+		objectId = result.rows[0].object_id;
+		await client.query('DELETE FROM objects WHERE object_id=\'' + objectId + '\';');
+		if (req.query.type == "Grave") {
+			await client.query('DELETE FROM graves WHERE object_id=\'' + objectId + '\';');
+		} else if (req.query.type == "Landmark") {
+			await client.query('DELETE FROM landmarks WHERE object_id=\'' + objectId + '\';');
+		}
+		client.release();
+		console.log("Deleted object for query: ", req.query);
 		res.redirect("/");
     } catch (err) {
       console.error(err);
