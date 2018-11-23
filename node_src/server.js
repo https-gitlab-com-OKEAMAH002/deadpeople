@@ -3,7 +3,7 @@ const app = express();
 const path = require('path');
 app.use(express.json());
 
-dburl = process.env.DATABASE_URL || "postgres://tfggtadleqgrsr:adbd5dcd5cdd20c18c1e7000cd120c08838985f31301a49c599b1b7bf3aa61a0@ec2-23-23-153-145.compute-1.amazonaws.com:5432/d8099ub0oseafu";
+dburl = process.env.DATABASE_URL || "<DB_URI>";
 
 const { Pool } = require('pg');
 const pool = new Pool({
