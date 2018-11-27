@@ -24,7 +24,7 @@ export default {
     // init map
     let map = L.map('image-map', {
       minZoom: 1,
-      maxZoom: this.maxZoom,
+      maxZoom: 3,
       center: [0, 0],
       zoom: 2,
       attributionControl: false,
