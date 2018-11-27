@@ -1,0 +1,1 @@
+web: cd node_src && npm install && npm start
