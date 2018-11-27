@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/sketsdever/deadpeople#readme",
   "dependencies": {
-    "@vue/cli-service": "^3.1.4",
+    "@vue/cli-service": "^3.1.4"
   }
 }
