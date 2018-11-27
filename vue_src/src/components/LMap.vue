@@ -14,17 +14,17 @@ import L from "leaflet";
 export default {
   name: 'LMap',
   mounted () {
+    // Reference: http://kempe.net/blog/2014/06/14/leaflet-pan-zoom-image.html
     // Using leaflet.js to pan and zoom a big image.
     // dimensions and url of the image
     const w = 1400,
-        h = 1398,
-        url = 'https://raw.githubusercontent.com/sketsdever/deadpeople/master/vue_src/src/assets/grovest_map.png';
+         h = 1398,
+         url = 'https://raw.githubusercontent.com/sketsdever/deadpeople/master/vue_src/src/assets/grovest_map.png';
     const maxZoom = 3, pzoom = maxZoom - 1; // use pzoom for unprojecting
-
     // init map
     let map = L.map('image-map', {
       minZoom: 1,
-      maxZoom: maxZoom,
+      maxZoom: this.maxZoom,
       center: [0, 0],
       zoom: 2,
       attributionControl: false,
@@ -40,7 +40,6 @@ export default {
     L.imageOverlay(url, bounds).addTo(map);
     // tell leaflet that the map is exactly as big as the image
     map.setMaxBounds(bounds);
-
     // icons
     const notableIcon = L.icon({
         iconUrl: 'https://raw.githubusercontent.com/sketsdever/deadpeople/master/vue_src/src/assets/star_icon.png',
