@@ -1,18 +1,64 @@
 const express = require('express');
 const app = express();
+const session = require('express-session');
+const login = require('connect-ensure-login');
+var cas = require('./cas.js');
+
+/*
+ *	App configuration
+*/
 app.use(express.static('./')); //so that root displays index.html
 app.use(express.json());
+app.use(session(
+	{secret: "cats",
+	resave: false,
+	saveUninitialized: true}));
 
+
+/*
+ *	Database configuration
+*/
 dburl = process.env.DATABASE_URL || "<DB_URI>";
-
 const { Pool } = require('pg');
 const pool = new Pool({
 	connectionString: dburl,
 	ssl: true
 });
 
+
+let host = process.env.IP || '0.0.0.0';
+let port = process.env.PORT || 3000;
+
+let auth = cas(host, port);
+
+// This route will de-authenticate the client with the Express server and then
+// redirect the client to the CAS logout page.
+app.get('/logout', auth.logout);
+
+// Small middleware that sets the CAS auth service_url on first request.
+app.use(auth.checkServiceURL);
+
+// All other routes require CAS authorization
+app.use(auth.bounce);
+
+/*
+ *	Routing
+*/
 app.get('/', (request, response) => {
 });
+
+
+
+// // Call back for authentication
+// app.get('/auth/github/callback', 
+//   passport.authenticate('github', {failureRedirect: '/login' }),
+//   function(req, res) {
+//   	if (req.session.returnTo != undefined){
+//   		res.redirect(req.session.returnTo);
+//   	} else {
+//     	res.redirect('/');
+//     }
+// });
 
 app.get('/db-test-create', async (req, res) => {
 	try {

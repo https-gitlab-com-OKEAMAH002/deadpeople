@@ -17,7 +17,12 @@
   },
   "homepage": "https://github.com/sketsdever/deadpeople#readme",
   "dependencies": {
+    "cas-authentication": "0.0.8",
+    "connect-ensure-login": "^0.1.1",
     "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "passport": "^0.4.0",
+    "passport-cas": "^0.1.1",
     "pg": "^7.6.1"
   }
 }
