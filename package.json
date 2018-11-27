@@ -4,7 +4,7 @@
   "description": "## CPSC 376 Digital Humanities FInal Project ### Claire, Elle, Michaela, Shea",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cd node_src && npm install && node server.js"
+    "start": "cd vue_src && npm install && npm run build && cd ../node_src && npm install && node server.js"
   },
   "repository": {
     "type": "git",
