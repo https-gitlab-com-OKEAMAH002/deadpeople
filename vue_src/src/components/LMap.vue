@@ -18,7 +18,7 @@ export default {
     // dimensions and url of the image
     const w = 2000,
         h = 1125,
-        url = 'https://raw.githubusercontent.com/sketsdever/deadpeople/master/vue_src/src/assets/grovest_map_basic.png';
+        url = 'https://raw.githubusercontent.com/sketsdever/deadpeople/master/vue_src/src/assets/grovest_map.png';
     const maxZoom = 3, pzoom = maxZoom - 1; // use pzoom for unprojecting
 
     // init map
@@ -43,29 +43,23 @@ export default {
 
     // icons
     const notableIcon = L.icon({
-        iconUrl: 'https://raw.githubusercontent.com/sketsdever/deadpeople/master/vue_src/src/assets/star_icon.svg',
+        iconUrl: '',
         iconSize: [30, 30],
         iconAnchor: [15, 15],
     });
-    const dIcon = L.divIcon({className: 'my-div-icon'});
     // pre-placed markers
-    // hide markers if zoom < 2 ?
+    // maybe want to hide markers if zoom < 2 ?
     let marker1 = L.marker(map.unproject([w/2+12, h/2], pzoom), {icon: notableIcon}).addTo(map);
-    let marker2 = L.marker(map.unproject([w/2-32, h/2-3], pzoom), {icon: dIcon}).addTo(map);
-    L.marker(map.unproject([w/2-32, h/2-20], pzoom), {icon: dIcon}).addTo(map);
-    //L.marker(map.unproject([w/2-32, h/2-36], pzoom), {icon: dIcon}).addTo(map);
-
+    let marker2 = L.circleMarker(map.unproject([w/2-32, h/2-3], pzoom)).addTo(map);
+    L.circleMarker(map.unproject([w/2-32, h/2-20], pzoom)).addTo(map);
     let circle1 = L.circleMarker(map.unproject([w/2-32, h/2-36], pzoom), {radius: 7}).addTo(map);
     L.circleMarker(map.unproject([w/2-32, h/2-54], pzoom), {radius: 7}).addTo(map);
-
     // click event
     marker1.bindPopup('<p>Notable person!</p><br><br><br>');
     marker2.bindPopup('<p>Plot Number</p>');
     circle1.bindPopup('<p>Plot Number</p>');
   }
 }
-
-
 </script>
 
 <style>
@@ -74,11 +68,5 @@ export default {
   height: 600px;
   border: 1px solid #ccc;
   margin-bottom: 10px;
-}
-.my-div-icon {
-  height: 60px;
-  width: 60px;
-  background-color: #eee;
-  border-radius: 100%;
 }
 </style>
