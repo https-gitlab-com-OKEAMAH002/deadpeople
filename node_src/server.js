@@ -1,23 +1,67 @@
 const express = require('express');
-const app = express();
 const path = require('path');
-app.use(express.json());
+const session = require('express-session');
+const cas = require('./config/cas.js');
+const app = express();
 
+/*
+ *	Database configuration
+*/
 dburl = process.env.DATABASE_URL || "<DB_URI>";
-
 const { Pool } = require('pg');
 const pool = new Pool({
 	connectionString: dburl,
 	ssl: true
 });
 
+/*
+ *	App configuration
+*/
+var host = process.env.IP || '0.0.0.0';
+var port = process.env.PORT || 3000;
+var sessionSecret = process.env.SESSION_SECRET || 'e70a1e1ee4b8f662f78';
+
+// app.use(express.static('../vue_src/dist/'));
+app.use("/js", express.static('../vue_src/dist/js'));
+app.use("/css", express.static('../vue_src/dist/css'));
+
+app.use(express.json());
+
+
+/*
+* Authentication Set Up
+*/
+
+// Set up an Express session, which is required for CASAuthentication.
+// 1 week duration, extended by a week each time they log in.
+var duration = 24 * 60 * 60 * 7 * 1000;
+app.use(session({
+	cookieName: 'session',
+	secret: sessionSecret,
+	resave: false,
+	saveUninitialized: false,
+	duration: duration,
+	activeDuration: duration
+}));
+
+var auth = cas(host, port);
+
+// This route will de-authenticate the client with the Express server and then
+// redirect the client to the CAS logout page.
+app.get('/logout', auth.logout);
+
+// Small middleware that sets the CAS auth service_url on first request.
+app.use(auth.checkServiceURL);
+
+// Add authentication to all route
+app.use(auth.bounce)
+
+/*
+ *	Routing
+*/
 app.get('/', (request, response) => {
 	response.sendFile(path.resolve(__dirname + '/../vue_src/dist/index.html'));
 });
-
-app.use(express.static('../vue_src/dist/')); //so that root displays index.html
-app.use("/js", express.static('../vue_src/dist/js'));
-app.use("/css", express.static('../vue_src/dist/css'));
 
 // ADMIN ONLY -- ONE-TIME INITIALIZATION OF TABLES IN DATABASE
 app.get('/db-init-tables', async (req, res) => {
@@ -156,6 +200,6 @@ app.get('/db-test-delete', async (req, res) => {
     }
 });
 
-app.listen(process.env.PORT || 3000, () => {
+app.listen(port, host, () => {
   console.log('Express running');
 });

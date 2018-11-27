@@ -4,6 +4,7 @@
   "description": "## CPSC 376 Digital Humanities FInal Project ### Claire, Elle, Michaela, Shea",
   "main": "index.js",
   "scripts": {
+    "make": "cd ../vue_src && npm run build && cd ../node_src && node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,7 +18,12 @@
   },
   "homepage": "https://github.com/sketsdever/deadpeople#readme",
   "dependencies": {
+    "cas-authentication": "0.0.8",
+    "connect-ensure-login": "^0.1.1",
     "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "passport": "^0.4.0",
+    "passport-cas": "^0.1.1",
     "path": "^0.12.7",
     "pg": "^7.6.1"
   }
