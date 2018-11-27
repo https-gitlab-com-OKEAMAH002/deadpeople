@@ -9,15 +9,15 @@
 </template>
 
 <script>
-import * as L from "leaflet";
+import L from "leaflet";
 
 export default {
   name: 'LMap',
   mounted () {
     // Using leaflet.js to pan and zoom a big image.
     // dimensions and url of the image
-    const w = 2000,
-        h = 1125,
+    const w = 1400,
+        h = 1398,
         url = 'https://raw.githubusercontent.com/sketsdever/deadpeople/master/vue_src/src/assets/grovest_map.png';
     const maxZoom = 3, pzoom = maxZoom - 1; // use pzoom for unprojecting
 
@@ -42,20 +42,20 @@ export default {
     map.setMaxBounds(bounds);
 
     // icons
-    const notableIcon = L.icon({
-        iconUrl: '',
-        iconSize: [30, 30],
-        iconAnchor: [15, 15],
-    });
+    // const notableIcon = L.icon({
+    //     iconUrl: '',
+    //     iconSize: [30, 30],
+    //     iconAnchor: [15, 15],
+    // });
     // pre-placed markers
     // maybe want to hide markers if zoom < 2 ?
-    let marker1 = L.marker(map.unproject([w/2+12, h/2], pzoom), {icon: notableIcon}).addTo(map);
-    let marker2 = L.circleMarker(map.unproject([w/2-32, h/2-3], pzoom)).addTo(map);
-    L.circleMarker(map.unproject([w/2-32, h/2-20], pzoom)).addTo(map);
+    //let marker1 = L.marker(map.unproject([w/2+12, h/2], pzoom), {icon: notableIcon}).addTo(map);
+    let marker2 = L.circleMarker(map.unproject([w/2-32, h/2-3], pzoom), {radius: 7}).addTo(map);
+    L.circleMarker(map.unproject([w/2-32, h/2-20], pzoom), {radius: 7}).addTo(map);
     let circle1 = L.circleMarker(map.unproject([w/2-32, h/2-36], pzoom), {radius: 7}).addTo(map);
     L.circleMarker(map.unproject([w/2-32, h/2-54], pzoom), {radius: 7}).addTo(map);
     // click event
-    marker1.bindPopup('<p>Notable person!</p><br><br><br>');
+    //marker1.bindPopup('<p>Notable person!</p><br><br><br>');
     marker2.bindPopup('<p>Plot Number</p>');
     circle1.bindPopup('<p>Plot Number</p>');
   }
@@ -64,7 +64,7 @@ export default {
 
 <style>
 #image-map {
-  width: 80%;
+  width: 60%;
   height: 600px;
   border: 1px solid #ccc;
   margin-bottom: 10px;
