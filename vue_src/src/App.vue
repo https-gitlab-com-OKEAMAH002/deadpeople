@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <img alt="Grove St. Gate" src="./assets/grovest_gate.png" height=400>
+    <img alt="Grove St. Gate" src="https://raw.githubusercontent.com/sketsdever/deadpeople/master/vue_src/src/assets/grovest_gate.png" height=400>
     <HelloWorld msg="Welcome to Grove St. Cemetery"/>
     <DatabaseEntry />
     <LMap />
