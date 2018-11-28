@@ -7,7 +7,7 @@ const app = express();
 /*
  *	Database configuration
 */
-dburl = process.env.DATABASE_URL || "<DB_URI>";
+dburl = process.env.DATABASE_URL || "postgres://tfggtadleqgrsr:adbd5dcd5cdd20c18c1e7000cd120c08838985f31301a49c599b1b7bf3aa61a0@ec2-23-23-153-145.compute-1.amazonaws.com:5432/d8099ub0oseafu";
 const { Pool } = require('pg');
 const pool = new Pool({
 	connectionString: dburl,
@@ -96,10 +96,11 @@ app.get(RegExp('/db-delete-table/(objects|graves|landmarks)'), async (req, res) 
 app.get('/db-add-grave', async (req, res) => {
 	try {
 		const client = await pool.connect();
-		await client.query('INSERT INTO objects(object_id, type, location) VALUES(DEFAULT, \'' + req.query.type + '\', \'' + req.query.location + '\');');
-		let result = await client.query('SELECT object_id FROM objects WHERE location=\'' + req.query.location + '\' AND type=\'' + req.query.type + '\';');
+		await client.query('INSERT INTO objects(object_id, type, location) VALUES(DEFAULT, $1, $2);', [req.query.type, req.query.location]);
+		// TODO: Use length of table for primary key; location + type may not actually be unique identifier.
+		let result = await client.query('SELECT object_id FROM objects WHERE location=$1 AND type=$2;', [req.query.location, req.query.type]);
 		objectId = result.rows[0].object_id;
-		await client.query('INSERT INTO graves(object_id, last_name, first_name, middle_name, date_of_birth, date_of_death, date_of_burrial) VALUES(' + objectId + ', \'' + req.query.lastName + '\', \'' + req.query.firstName + '\', \'' + req.query.middleName + '\', \'' + req.query.DOBirth + '\', \'' + req.query.DODeath + '\', \'' + req.query.DOBurial + '\');');
+		await client.query('INSERT INTO graves(object_id, last_name, first_name, middle_name, date_of_birth, date_of_death, date_of_burrial) VALUES($1, $2, $3, $4, $5, $6, $7);', [objectId, req.query.lastName, req.query.firstName, req.query.middleName, req.query.DOBirth, req.query.DODeath, req.query.DOBurial]);
 		client.release();
 		console.log("Added grave for query: ", req.query);
 		res.redirect("/");
@@ -112,10 +113,10 @@ app.get('/db-add-grave', async (req, res) => {
 app.get('/db-add-landmark', async (req, res) => {
 	try {
 		const client = await pool.connect();
-		await client.query('INSERT INTO objects(object_id, type, location) VALUES(DEFAULT, \'' + req.query.type + '\', \'' + req.query.location + '\');');
-		let result = await client.query('SELECT object_id FROM objects WHERE location=\'' + req.query.location + '\' AND type=\'' + req.query.type + '\';');
+		await client.query('INSERT INTO objects(object_id, type, location) VALUES(DEFAULT, $1, $2);', [req.query.type, req.query.location]);
+		let result = await client.query('SELECT object_id FROM objects WHERE location=$1 AND type=$2;', [req.query.location, req.query.type]);
 		objectId = result.rows[0].object_id;
-		await client.query('INSERT INTO landmarks(object_id, description, has_photos) VALUES('+ objectId +', \'' + req.query.description + '\', \'' + req.query.hasPhotos + '\');');
+		await client.query('INSERT INTO landmarks(object_id, description, has_photos) VALUES($1, $2, $3);', [objectId, req.query.description, req.query.hasPhotos]);
 		client.release();
 		console.log("Added landmark for query: ", req.query);
 		res.redirect("/");
@@ -141,13 +142,13 @@ app.get('/db-view-objects', async (req, res) => {
 app.get('/db-delete-object', async (req, res) => {
 	try {
 		const client = await pool.connect();
-		let result = await client.query('SELECT object_id FROM objects WHERE location=\'' + req.query.location + '\' AND type=\'' + req.query.type + '\';');
+		let result = await client.query('SELECT object_id FROM objects WHERE location=$1 AND type=$2;', [req.query.location, req.query.type]);
 		objectId = result.rows[0].object_id;
-		await client.query('DELETE FROM objects WHERE object_id=\'' + objectId + '\';');
+		await client.query('DELETE FROM objects WHERE object_id=$1;', [objectId]);
 		if (req.query.type == "Grave") {
-			await client.query('DELETE FROM graves WHERE object_id=\'' + objectId + '\';');
+			await client.query('DELETE FROM graves WHERE object_id=$1;', [objectId]);
 		} else if (req.query.type == "Landmark") {
-			await client.query('DELETE FROM landmarks WHERE object_id=\'' + objectId + '\';');
+			await client.query('DELETE FROM landmarks WHERE object_id=$1;', [objectId]);
 		}
 		client.release();
 		console.log("Deleted object for query: ", req.query);

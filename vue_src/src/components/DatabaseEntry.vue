@@ -122,7 +122,7 @@ export default {
                 type: "Landmark",
                 location: this.location,
             }
-            let url = new URL(this.PATH + "db-delete-landmark");
+            let url = new URL(this.PATH + "db-delete-object");
             Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
             let response = await this.fetchAsync(url);
         },
