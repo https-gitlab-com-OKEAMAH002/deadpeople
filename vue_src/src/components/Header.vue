@@ -3,14 +3,14 @@
 
   <b-navbar toggleable="md" type="dark" variant="info">
 
-    <b-navbar-brand href="#">
+    <b-navbar-brand to="/">
       <img alt="Grove St. Gate" src="../assets/grovest_gate.png">
     </b-navbar-brand>
 
     <b-navbar-nav>
-      <b-nav-item href="#" >Map</b-nav-item>
+      <b-nav-item to="/">Map</b-nav-item>
       <b-nav-item href="#" >The Team</b-nav-item>
-      <b-nav-item href="#" >Admin</b-nav-item>
+      <b-nav-item to="/database" >Admin</b-nav-item>
     </b-navbar-nav>
 
   </b-navbar>
