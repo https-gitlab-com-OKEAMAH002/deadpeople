@@ -1,3 +1,5 @@
+// Thank you Kyle Jensen 
+
 'use strict';
 var CASAuthentication = require('cas-authentication');
 

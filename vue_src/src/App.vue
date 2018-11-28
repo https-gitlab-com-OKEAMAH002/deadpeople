@@ -1,23 +1,17 @@
 <template>
   <div id="app">
-    <img alt="Grove St. Gate" src="./assets/grovest_gate.png" height=400>
-    <HelloWorld msg="Welcome to Grove St. Cemetery"/>
-    <DatabaseEntry />
-    <LMap />
+    <Header/>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
-import DatabaseEntry from './components/DatabaseEntry.vue';
-import LMap from './components/LMap.vue';
+import Header from './components/Header.vue';
 
 export default {
   name: 'app',
   components: {
-    HelloWorld,
-    DatabaseEntry,
-    LMap
+    Header
   }
 }
 </script>
