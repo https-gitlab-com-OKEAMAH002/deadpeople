@@ -3,12 +3,12 @@
   <b-navbar toggleable="md" type="dark" variant="info">
 
     <b-navbar-brand to="/">
-      <img alt="Grove St. Gate" src="https://github.com/sketsdever/deadpeople/blob/master/vue_src/src/assets/grovest_gate.png?raw=true">
+      <img alt="Grove St. Gate" src="https://github.com/sketsdever/deadpeople/blob/master/vue_src/src/assets/grovest_gate_icon_compressed.png?raw=true" width="40">
     </b-navbar-brand>
 
     <b-navbar-nav>
       <b-nav-item to="/">Map</b-nav-item>
-      <b-nav-item href="/about" >The Team</b-nav-item>
+      <b-nav-item to="/about" >The Team</b-nav-item>
       <b-nav-item to="/database" >Admin</b-nav-item>
     </b-navbar-nav>
 
