@@ -130,9 +130,10 @@ app.get('/db-view-objects', async (req, res) => {
 	try {
 		const client = await pool.connect();
 		let query = await client.query('SELECT * FROM objects;');
-		console.log("Current objects: ", query.rows);
 		client.release();
-		res.redirect("/");
+		if (query.rows != undefined) {
+			res.send(query.rows);
+		}
     } catch (err) {
       console.error(err);
       res.send("Error " + err);

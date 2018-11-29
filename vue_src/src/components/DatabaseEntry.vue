@@ -48,7 +48,7 @@
         <b-button v-on:click="onClickViewObjects">View all objects</b-button>
         <b-button v-on:click="onClickHideObjects">Hide objects</b-button>
         <div v-if="showObjects">
-            <p>A table of all the objects will load here!! When I figure out how to return them from the server...</p>
+            <b-table striped hover :items="objectResults"></b-table>
         </div>
     </div>
 </template>
@@ -71,6 +71,7 @@ export default {
             DOBurial: "",
             description: "",
             hasPhotos: false,
+            objectResults: [],
         }
     },
     methods: {
@@ -127,9 +128,18 @@ export default {
             let response = await this.fetchAsync(url);
         },
         async onClickViewObjects() {
-            this.showObjects = true;
             let url = new URL(this.PATH + "db-view-objects");
             let response = await this.fetchAsync(url);
+            if (response != undefined) {
+                response.forEach(result => {
+                    this.objectResults.push({
+                        Id: result.object_id,
+                        Type: result.type,
+                        Location: result.location,
+                    });
+                });
+                this.showObjects = true;
+            }
         },
         onClickHideObjects() {
             this.showObjects = false;
