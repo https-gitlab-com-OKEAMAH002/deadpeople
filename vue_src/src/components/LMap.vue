@@ -55,9 +55,18 @@ export default {
     L.circleMarker(map.unproject([w/2-32, h/2-54], pzoom), {radius: 7}).addTo(map);
     // click event
     marker1.bindPopup('<p>Notable person!</p><br><br><br>');
-    marker2.bindPopup('<p>Plot Number</p>');
     circle1.bindPopup('<p>Plot Number</p>');
-  }
+
+    function onClickPlot() {
+      console.log("clicked plot!");
+    }
+
+    let button = document.createElement("button");
+    let buttontext = document.createTextNode("Click to view plot details");
+    button.appendChild(buttontext);
+    marker2.bindPopup(button);
+    button.addEventListener("click", function() { onClickPlot(); });
+  },
 }
 </script>
 
