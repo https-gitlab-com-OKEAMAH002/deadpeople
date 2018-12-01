@@ -13,7 +13,35 @@ import L from "leaflet";
 
 export default {
   name: 'LMap',
-  mounted () {
+  methods: {
+    async fetchAsync(url) {
+        try {
+            let response = await fetch(url);
+            let data = await response.json();
+            return data;
+        } catch (error) {
+            console.error(error);
+        }
+    },
+    async fetchNotables() {
+      let response = await this.fetchAsync(new URL("http://localhost:3000/db-view-objects"));
+      if (response != undefined) {
+        let notables = [];
+        response.forEach(result => {
+            notables.push({
+                Id: result.object_id,
+                Type: result.type,
+                Location: result.location,
+                X: 0.4328571429,  // TODO: MAKE LEGIT
+                Y: 0.6028571429,  // TODO: MAKE LEGIT
+            });
+        });
+        return notables;
+      }
+    },
+  },
+  async mounted () {
+    let notables = await this.fetchNotables();
     // Reference: http://kempe.net/blog/2014/06/14/leaflet-pan-zoom-image.html
     // Using leaflet.js to pan and zoom a big image.
     // dimensions and url of the image
@@ -46,26 +74,19 @@ export default {
         iconSize: [30, 30],
         iconAnchor: [15, 15],
     });
-    // pre-placed markers
-    // maybe want to hide markers if zoom < 2 ?
-    let marker1 = L.marker(map.unproject([w/2+12, h/2], pzoom), {icon: notableIcon}).addTo(map);
-    let marker2 = L.circleMarker(map.unproject([w/2-32, h/2-3], pzoom), {radius: 7}).addTo(map);
-    L.circleMarker(map.unproject([w/2-32, h/2-20], pzoom), {radius: 7}).addTo(map);
-    let circle1 = L.circleMarker(map.unproject([w/2-32, h/2-36], pzoom), {radius: 7}).addTo(map);
-    L.circleMarker(map.unproject([w/2-32, h/2-54], pzoom), {radius: 7}).addTo(map);
-    // click event
-    marker1.bindPopup('<p>Notable person!</p><br><br><br>');
-    circle1.bindPopup('<p>Plot Number</p>');
 
     function onClickPlot() {
       console.log("clicked plot!");
     }
 
-    let button = document.createElement("button");
-    let buttontext = document.createTextNode("Click to view plot details");
-    button.appendChild(buttontext);
-    marker2.bindPopup(button);
-    button.addEventListener("click", function() { onClickPlot(); });
+    notables.forEach(notable=> {
+      let marker = L.marker(map.unproject([w*notable.X, h*notable.X], pzoom), {icon: notableIcon}).addTo(map);
+      let button = document.createElement("button");
+      let buttontext = document.createTextNode("Click to view plot details");
+      button.appendChild(buttontext);
+      marker.bindPopup(button);
+      button.addEventListener("click", function() { onClickPlot(); });
+    }); 
   },
 }
 </script>
