@@ -126,6 +126,20 @@ app.get('/db-add-landmark', async (req, res) => {
     }
 });
 
+app.get('/db-fetch-object-for-id', async (req, res) => {
+	try {
+		const client = await pool.connect();
+		let query = await client.query('SELECT * FROM objects WHERE object_id =$1;', [req.query.id]);
+		client.release();
+		if (query.rows != undefined) {
+			res.send(query.rows);
+		}
+    } catch (err) {
+      console.error(err);
+      res.send("Error " + err);
+    }
+});
+
 app.get('/db-view-objects', async (req, res) => {
 	try {
 		const client = await pool.connect();

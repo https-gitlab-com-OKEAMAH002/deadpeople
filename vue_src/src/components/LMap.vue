@@ -29,9 +29,9 @@ export default {
         let notables = [];
         response.forEach(result => {
             notables.push({
-                Id: result.object_id,
-                Type: result.type,
-                Location: result.location,
+                id: result.object_id,
+                type: result.type,
+                location: result.location,
                 X: 0.4328571429,  // TODO: MAKE LEGIT
                 Y: 0.6028571429,  // TODO: MAKE LEGIT
             });
@@ -42,6 +42,10 @@ export default {
   },
   async mounted () {
     let notables = await this.fetchNotables();
+    let plots = [];
+    for (let i = 0; i < 1049; i++) {
+      plots.push("EMPTY");
+    }
     // Reference: http://kempe.net/blog/2014/06/14/leaflet-pan-zoom-image.html
     // Using leaflet.js to pan and zoom a big image.
     // dimensions and url of the image
@@ -75,18 +79,41 @@ export default {
         iconAnchor: [15, 15],
     });
 
-    function onClickPlot() {
-      console.log("clicked plot!");
+    async function fetchAsync(url) {  // TODO: BIND TO "THIS" INSTEAD OF RE-WRITING FUNCTION?
+        try {
+            let response = await fetch(url);
+            let data = await response.json();
+            return data;
+        } catch (error) {
+            console.error(error);
+        }
     }
 
-    notables.forEach(notable=> {
-      let marker = L.marker(map.unproject([w*notable.X, h*notable.X], pzoom), {icon: notableIcon}).addTo(map);
-      let button = document.createElement("button");
-      let buttontext = document.createTextNode("Click to view plot details");
-      button.appendChild(buttontext);
-      marker.bindPopup(button);
-      button.addEventListener("click", function() { onClickPlot(); });
-    }); 
+    async function onClickPlot(plotNumber) {
+      console.log("clicked plot! plotNumber: ", plotNumber);
+      await plots[plotNumber - 1].forEach(async function(notable) {
+        let url = new URL("http://localhost:3000/db-fetch-object-for-id");
+        let params = {
+          id: notable.id,
+        }
+        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+        let response = await fetchAsync(url);
+        // TODO: Put information from this object in a modal :) Will also want to specifically query Graves table.
+      });
+    }
+
+    await notables.forEach(async function(notable) {
+      if (plots[notable.location - 1] == "EMPTY") {
+        let marker = L.marker(map.unproject([w*notable.X, h*notable.X], pzoom), {icon: notableIcon}).addTo(map);
+        let button = document.createElement("button");
+        let buttontext = document.createTextNode("Click to view plot details");
+        button.appendChild(buttontext);
+        marker.bindPopup(button);
+        button.addEventListener("click", async function() { await onClickPlot(notable.location); });
+        plots[notable.location - 1] = [];
+      }
+      plots[notable.location - 1].push(notable);
+    });
   },
 }
 </script>
