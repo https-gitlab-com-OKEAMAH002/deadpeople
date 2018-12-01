@@ -79,15 +79,7 @@ export default {
         iconAnchor: [15, 15],
     });
 
-    async function fetchAsync(url) {  // TODO: BIND TO "THIS" INSTEAD OF RE-WRITING FUNCTION?
-        try {
-            let response = await fetch(url);
-            let data = await response.json();
-            return data;
-        } catch (error) {
-            console.error(error);
-        }
-    }
+    let fetchAsync = this.fetchAsync;
 
     async function onClickPlot(plotNumber) {
       console.log("clicked plot! plotNumber: ", plotNumber);
@@ -98,6 +90,7 @@ export default {
         }
         Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
         let response = await fetchAsync(url);
+        console.log(response);
         // TODO: Put information from this object in a modal :) Will also want to specifically query Graves table.
       });
     }
