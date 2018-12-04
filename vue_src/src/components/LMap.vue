@@ -16,6 +16,7 @@
     </b-container>
   </b-modal>
   <div id="image-map"></div>
+  <br><br><br><br>
   </center>
 
 </template>
@@ -161,8 +162,8 @@ export default {
 
 <style>
 #image-map {
-  width: 80%;
-  height: 500px;
+  width: 70%;
+  height: 400px;
   border: 1px solid #ccc;
   margin-bottom: 30px;
 }
