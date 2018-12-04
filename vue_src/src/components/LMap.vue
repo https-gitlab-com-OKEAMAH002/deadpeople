@@ -1,8 +1,13 @@
 <template>
 
   <center>
-  <h2 id="title">Grove St. Map</h2>
-  <p>Scroll to zoom. Click and drag to pan.<br>Select a plot to view information.</p>
+  <br>
+  <div class="info">
+    <h2 id="title">Grove St. Map</h2>
+  </div>
+  <div class="info">
+    <p>Scroll to zoom. Click and drag to pan.<br>Select a plot to view information.</p>
+  </div>
   <b-modal ref="modalRef" hide-footer size="lg"> 
     <p>
       Details page!!
@@ -133,13 +138,16 @@ export default {
 
 <style>
 #image-map {
-  width: 90%;
-  height: 600px;
+  width: 80%;
+  height: 500px;
   border: 1px solid #ccc;
   margin-bottom: 30px;
 }
 
-#title {
-  margin-top: 20px;
+.info {
+  margin: 0 auto;
+  background-color: #d3d3d3;
+  width: 400px;
+  height: auto;
 }
 </style>

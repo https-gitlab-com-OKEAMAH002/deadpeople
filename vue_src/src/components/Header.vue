@@ -1,5 +1,4 @@
 <template>
-  <div>
   <b-navbar toggleable="md" type="dark" variant="info" fixed="top">
 
     <b-navbar-brand to="/map">
@@ -13,9 +12,6 @@
     </b-navbar-nav>
 
   </b-navbar>
-<br> <br>
-</div>
-
 </template>
 
 <script>
