@@ -3,10 +3,12 @@
   <center>
   <h2>Grove St. Map</h2>
   <p>Scroll to zoom. Click and drag to pan.<br>Select a plot to view information.</p>
-  <b-modal ref="modalRef" hide-footer size="lg"> 
-    <p>
-      Details page!!
-    </p>
+  <b-modal ref="modalRef" @shown="modalShown" hide-footer size="lg"> 
+    <b-container fluid>
+      <div v-if="modalVisible">
+        <PlotDetails/>
+      </div>
+    </b-container>
   </b-modal>
   <div id="image-map"></div>
   </center>
@@ -15,9 +17,18 @@
 
 <script>
 import L from "leaflet";
+import PlotDetails from './PlotDetails.vue';
 
 export default {
   name: 'LMap',
+  data() {
+    return {
+      modalVisible: false,
+    }
+  },
+  components: {
+    PlotDetails,
+  },
   methods: {
     async fetchAsync(url) {
         try {
@@ -56,6 +67,12 @@ export default {
     },
     showModal() {
       this.$refs.modalRef.show();
+    },
+    modalShown: function() {
+      this.modalVisible = true;
+    },
+    modalHidden: function() {
+      this.modalVisible = false;
     },
   },
   async mounted () {
