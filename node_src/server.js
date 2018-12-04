@@ -190,6 +190,34 @@ app.get('/db-delete-object', async (req, res) => {
     }
 });
 
+app.get('/db-fetch-relative-location-for-plot', async(req, res) => {
+	try {
+		const client = await pool.connect();
+		let query = await client.query('SELECT relative_x, relative_y FROM locations WHERE plot_number=$1;', [req.query.plot_number]);
+		client.release();
+		if (query.rows != undefined) {
+			res.send(query.rows);
+		}
+    } catch (err) {
+      console.error(err);
+      res.send("Error " + err);
+    }
+});
+
+app.get('/db-fetch-locations', async(req, res) => {
+	try {
+		const client = await pool.connect();
+		let query = await client.query('SELECT * FROM locations;');
+		client.release();
+		if (query.rows != undefined) {
+			res.send(query.rows);
+		}
+    } catch (err) {
+      console.error(err);
+      res.send("Error " + err);
+    }
+});
+
 // TESTING
 
 app.get('/db-test-create', async (req, res) => {

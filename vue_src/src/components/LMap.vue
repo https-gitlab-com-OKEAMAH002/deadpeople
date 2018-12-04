@@ -27,14 +27,24 @@ export default {
       let response = await this.fetchAsync(new URL("http://localhost:3000/db-view-objects"));
       if (response != undefined) {
         let notables = [];
-        response.forEach(result => {
-            notables.push({
-                id: result.object_id,
-                type: result.type,
-                location: result.location,
-                X: 0.4328571429,  // TODO: MAKE LEGIT
-                Y: 0.6028571429,  // TODO: MAKE LEGIT
+        let locations = [];
+        let locationResponse = await this.fetchAsync(new URL("http://localhost:3000/db-fetch-locations"));
+        if (locationResponse != undefined) {
+          locationResponse.forEach(locationResult => {
+            locations.push({
+              X: locationResult.relative_x,
+              Y: locationResult.relative_y,
             });
+          });
+        }
+        response.forEach(result => {
+          notables.push({
+              id: result.object_id,
+              type: result.type,
+              location: result.location,
+              X: locations[result.location - 1].X,
+              Y: locations[result.location - 1].Y,
+          });
         });
         return notables;
       }
