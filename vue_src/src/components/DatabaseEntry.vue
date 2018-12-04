@@ -143,6 +143,7 @@ export default {
         },
         onClickHideObjects() {
             this.showObjects = false;
+            this.objectResults = [];
         },
         async fetchAsync(url) {
             try {

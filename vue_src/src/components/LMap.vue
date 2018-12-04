@@ -3,6 +3,11 @@
   <center>
   <h2 id="title">Grove St. Map</h2>
   <p>Scroll to zoom. Click and drag to pan.<br>Select a plot to view information.</p>
+  <b-modal ref="modalRef" hide-footer size="lg"> 
+    <p>
+      Details page!!
+    </p>
+  </b-modal>
   <div id="image-map"></div>
   </center>
 
@@ -49,6 +54,9 @@ export default {
         return notables;
       }
     },
+    showModal() {
+      this.$refs.modalRef.show();
+    },
   },
   async mounted () {
     let notables = await this.fetchNotables();
@@ -90,6 +98,7 @@ export default {
     });
 
     let fetchAsync = this.fetchAsync;
+    let showModal = this.showModal;
 
     async function onClickPlot(plotNumber) {
       console.log("clicked plot! plotNumber: ", plotNumber);
@@ -103,6 +112,7 @@ export default {
         console.log(response);
         // TODO: Put information from this object in a modal :) Will also want to specifically query Graves table.
       });
+      showModal();
     }
 
     await notables.forEach(async function(notable) {
