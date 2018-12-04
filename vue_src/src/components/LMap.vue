@@ -8,10 +8,12 @@
   <div class="info">
     <p>Scroll to zoom. Click and drag to pan.<br>Select a plot to view information.</p>
   </div>
-  <b-modal ref="modalRef" hide-footer size="lg"> 
-    <p>
-      Details page!!
-    </p>
+  <b-modal ref="modalRef" @shown="modalShown" hide-footer size="lg">
+    <b-container fluid>
+      <div v-if="modalVisible">
+        <PlotDetails v-bind:contents="plotContents"/>
+      </div>
+    </b-container>
   </b-modal>
   <div id="image-map"></div>
   </center>
@@ -20,9 +22,19 @@
 
 <script>
 import L from "leaflet";
+import PlotDetails from './PlotDetails.vue';
 
 export default {
   name: 'LMap',
+  data() {
+    return {
+      modalVisible: false,
+      plotContents: [],
+    }
+  },
+  components: {
+    PlotDetails,
+  },
   methods: {
     async fetchAsync(url) {
         try {
@@ -62,6 +74,15 @@ export default {
     showModal() {
       this.$refs.modalRef.show();
     },
+    modalShown: function() {
+      this.modalVisible = true;
+    },
+    modalHidden: function() {
+      this.modalVisible = false;
+    },
+    setPlotContents: function(contents) {
+      this.plotContents = contents;
+    }
   },
   async mounted () {
     let notables = await this.fetchNotables();
@@ -104,6 +125,7 @@ export default {
 
     let fetchAsync = this.fetchAsync;
     let showModal = this.showModal;
+    let setPlotContents = this.setPlotContents;
 
     async function onClickPlot(plotNumber) {
       console.log("clicked plot! plotNumber: ", plotNumber);
@@ -115,6 +137,7 @@ export default {
         Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
         let response = await fetchAsync(url);
         console.log(response);
+        setPlotContents(response);
         // TODO: Put information from this object in a modal :) Will also want to specifically query Graves table.
       });
       showModal();
