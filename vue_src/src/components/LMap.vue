@@ -6,7 +6,7 @@
   <b-modal ref="modalRef" @shown="modalShown" hide-footer size="lg"> 
     <b-container fluid>
       <div v-if="modalVisible">
-        <PlotDetails/>
+        <PlotDetails v-bind:contents="plotContents"/>
       </div>
     </b-container>
   </b-modal>
@@ -24,6 +24,7 @@ export default {
   data() {
     return {
       modalVisible: false,
+      plotContents: [],
     }
   },
   components: {
@@ -74,6 +75,9 @@ export default {
     modalHidden: function() {
       this.modalVisible = false;
     },
+    setPlotContents: function(contents) {
+      this.plotContents = contents;
+    }
   },
   async mounted () {
     let notables = await this.fetchNotables();
@@ -116,6 +120,7 @@ export default {
 
     let fetchAsync = this.fetchAsync;
     let showModal = this.showModal;
+    let setPlotContents = this.setPlotContents;
 
     async function onClickPlot(plotNumber) {
       console.log("clicked plot! plotNumber: ", plotNumber);
@@ -127,6 +132,7 @@ export default {
         Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
         let response = await fetchAsync(url);
         console.log(response);
+        setPlotContents(response);
         // TODO: Put information from this object in a modal :) Will also want to specifically query Graves table.
       });
       showModal();
