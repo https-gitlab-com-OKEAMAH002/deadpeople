@@ -1,7 +1,7 @@
 <template>
 
   <center>
-  <h2>Grove St. Map</h2>
+  <h2 id="title">Grove St. Map</h2>
   <p>Scroll to zoom. Click and drag to pan.<br>Select a plot to view information.</p>
   <b-modal ref="modalRef" @shown="modalShown" hide-footer size="lg"> 
     <b-container fluid>
@@ -150,9 +150,13 @@ export default {
 
 <style>
 #image-map {
-  width: 60%;
+  width: 90%;
   height: 600px;
   border: 1px solid #ccc;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
+}
+
+#title {
+  margin-top: 20px;
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
-  
-  <b-navbar toggleable="md" type="dark" variant="info">
+  <div>
+  <b-navbar toggleable="md" type="dark" variant="info" fixed="top">
 
-    <b-navbar-brand to="/">
+    <b-navbar-brand to="/map">
       <img alt="Grove St. Gate" src="https://github.com/sketsdever/deadpeople/blob/master/vue_src/src/assets/grovest_gate_icon_compressed.png?raw=true" width="40">
     </b-navbar-brand>
 
@@ -13,6 +13,8 @@
     </b-navbar-nav>
 
   </b-navbar>
+<br> <br>
+</div>
 
 </template>
 
