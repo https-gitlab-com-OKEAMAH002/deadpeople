@@ -1,8 +1,13 @@
 <template>
 
   <center>
-  <h2>Grove St. Map</h2>
+  <h2 id="title">Grove St. Map</h2>
   <p>Scroll to zoom. Click and drag to pan.<br>Select a plot to view information.</p>
+  <b-modal ref="modalRef" hide-footer size="lg"> 
+    <p>
+      Details page!!
+    </p>
+  </b-modal>
   <div id="image-map"></div>
   </center>
 
@@ -27,17 +32,30 @@ export default {
       let response = await this.fetchAsync(new URL("http://localhost:3000/db-view-objects"));
       if (response != undefined) {
         let notables = [];
-        response.forEach(result => {
-            notables.push({
-                id: result.object_id,
-                type: result.type,
-                location: result.location,
-                X: 0.4328571429,  // TODO: MAKE LEGIT
-                Y: 0.6028571429,  // TODO: MAKE LEGIT
+        let locations = [];
+        let locationResponse = await this.fetchAsync(new URL("http://localhost:3000/db-fetch-locations"));
+        if (locationResponse != undefined) {
+          locationResponse.forEach(locationResult => {
+            locations.push({
+              X: locationResult.relative_x,
+              Y: locationResult.relative_y,
             });
+          });
+        }
+        response.forEach(result => {
+          notables.push({
+              id: result.object_id,
+              type: result.type,
+              location: result.location,
+              X: locations[result.location - 1].X,
+              Y: locations[result.location - 1].Y,
+          });
         });
         return notables;
       }
+    },
+    showModal() {
+      this.$refs.modalRef.show();
     },
   },
   async mounted () {
@@ -80,6 +98,7 @@ export default {
     });
 
     let fetchAsync = this.fetchAsync;
+    let showModal = this.showModal;
 
     async function onClickPlot(plotNumber) {
       console.log("clicked plot! plotNumber: ", plotNumber);
@@ -93,6 +112,7 @@ export default {
         console.log(response);
         // TODO: Put information from this object in a modal :) Will also want to specifically query Graves table.
       });
+      showModal();
     }
 
     await notables.forEach(async function(notable) {
@@ -113,9 +133,13 @@ export default {
 
 <style>
 #image-map {
-  width: 60%;
+  width: 90%;
   height: 600px;
   border: 1px solid #ccc;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
+}
+
+#title {
+  margin-top: 20px;
 }
 </style>
