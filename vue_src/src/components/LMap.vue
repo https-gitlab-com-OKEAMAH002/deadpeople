@@ -1,9 +1,14 @@
 <template>
 
   <center>
-  <h2 id="title">Grove St. Map</h2>
-  <p>Scroll to zoom. Click and drag to pan.<br>Select a plot to view information.</p>
-  <b-modal ref="modalRef" @shown="modalShown" hide-footer size="lg"> 
+  <br>
+  <div class="text-box">
+    <h2 id="title">Grove St. Map</h2>
+  </div>
+  <div class="text-box">
+    <p>Scroll to zoom. Click and drag to pan.<br>Select a plot to view information.</p>
+  </div>
+  <b-modal ref="modalRef" @shown="modalShown" hide-footer size="lg">
     <b-container fluid>
       <div v-if="modalVisible">
         <PlotDetails v-bind:contents="plotContents"/>
@@ -11,6 +16,7 @@
     </b-container>
   </b-modal>
   <div id="image-map"></div>
+  <br><br><br><br>
   </center>
 
 </template>
@@ -156,13 +162,9 @@ export default {
 
 <style>
 #image-map {
-  width: 90%;
-  height: 600px;
+  width: 70%;
+  height: 400px;
   border: 1px solid #ccc;
   margin-bottom: 30px;
-}
-
-#title {
-  margin-top: 20px;
 }
 </style>
