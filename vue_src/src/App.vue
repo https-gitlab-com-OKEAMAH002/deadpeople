@@ -1,11 +1,15 @@
 <template>
-  <div id="app">
-    <Header/>
-<!--     <b-modal id="welcome" size="lg" title="Welcome">
-      <Welcome/>
-    </b-modal> -->
-    <router-view></router-view>
-    <Footer/>
+  <div>
+    
+<!--     <div v-if="welcomeShow" id="welcome" @entered="onEnter">
+        <Welcome/>
+    </div> -->
+    <div id="app">
+      <Header/>
+      <router-view></router-view>
+      <Footer/>
+    </div>
+    
   </div>
 </template>
 
@@ -20,6 +24,14 @@ export default {
     Header,
     Welcome,
     Footer
+  },
+  data: {
+    welcomeShow: true
+  },
+  methods: {
+    onEnter(){
+      this.welcomeShow = false;
+    }
   }
 }
 </script>
@@ -44,5 +56,14 @@ export default {
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
+}
+
+.text-box {
+    margin: 0 auto;
+    background-color: #d3d3d3;
+    width: 400px;
+    height: auto;
+    opacity: 0.9;
+    border-radius: 10px;
 }
 </style>

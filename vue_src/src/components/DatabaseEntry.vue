@@ -1,7 +1,7 @@
 <template>
 <div>
     <br>
-    <div class="databaseEntry">
+    <div class="text-box">
         <h1>Admin features</h1>
         <p>Add and remove objects from the database:</p>
         <b-dropdown text="Select object type">
@@ -52,7 +52,7 @@
         <div v-if="showObjects">
             <b-table striped hover :items="objectResults"></b-table>
         </div>
-        <br>
+        <br><br><br>
     </div>
 
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
@@ -166,11 +166,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.databaseEntry {
+.text-box {
     margin-top: 20;
-    margin: 0 auto;
-    background-color: #d3d3d3;
-    width: 400px;
-    height: auto;
 }
 </style>

@@ -2,10 +2,10 @@
 
   <center>
   <br>
-  <div class="info">
+  <div class="text-box">
     <h2 id="title">Grove St. Map</h2>
   </div>
-  <div class="info">
+  <div class="text-box">
     <p>Scroll to zoom. Click and drag to pan.<br>Select a plot to view information.</p>
   </div>
   <b-modal ref="modalRef" @shown="modalShown" hide-footer size="lg">
@@ -166,12 +166,5 @@ export default {
   height: 400px;
   border: 1px solid #ccc;
   margin-bottom: 30px;
-}
-
-.info {
-  margin: 0 auto;
-  background-color: #d3d3d3;
-  width: 400px;
-  height: auto;
 }
 </style>
