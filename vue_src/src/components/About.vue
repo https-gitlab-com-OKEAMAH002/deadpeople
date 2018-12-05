@@ -6,7 +6,7 @@
 
 	<br><br>
 	<div class="text-box">
-		Claire, Elle, Shea, and Michaela are students in CS376, with out advisor Goze we are working on this project for our final project. :)
+		Claire, Elle, Shea, and Michaela are students in CS376, with our advisor Goze we are working on this site for our final project. :)
 	</div>
 
 	<br><br><br><br><br><br>

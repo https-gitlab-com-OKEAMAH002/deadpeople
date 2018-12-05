@@ -146,7 +146,7 @@ export default {
 
     await notables.forEach(async function(notable) {
       if (plots[notable.location - 1] == "EMPTY") {
-        let marker = L.marker(map.unproject([w*notable.X, h*notable.X], pzoom), {icon: notableIcon}).addTo(map);
+        let marker = L.marker(map.unproject([w*notable.X, h*notable.Y], pzoom), {icon: notableIcon}).addTo(map);
         let button = document.createElement("button");
         let buttontext = document.createTextNode("Click to view plot details");
         button.appendChild(buttontext);
@@ -163,7 +163,7 @@ export default {
 <style>
 #image-map {
   width: 70%;
-  height: 400px;
+  height: 600px;
   border: 1px solid #ccc;
   margin-bottom: 30px;
 }
