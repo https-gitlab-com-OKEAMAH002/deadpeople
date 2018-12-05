@@ -16,7 +16,7 @@ export default {
   methods: {
     onEnter (event) {
     	console.log("Emited");
-      	this.$emit('entered', 'true');
+      	this.$emit('entered');
     }
   }
 }
