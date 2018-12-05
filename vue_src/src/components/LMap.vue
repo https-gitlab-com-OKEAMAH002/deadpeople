@@ -100,7 +100,7 @@ export default {
     const maxZoom = 3, pzoom = maxZoom - 1; // use pzoom for unprojecting
     // init map
     let map = L.map('image-map', {
-      minZoom: 1,
+      minZoom: 0,
       maxZoom: 3,
       center: [0, 0],
       zoom: 2,
@@ -118,11 +118,11 @@ export default {
     // tell leaflet that the map is exactly as big as the image
     map.setMaxBounds(bounds);
     // icons
-    const notableIcon = L.icon({
-        iconUrl: 'https://raw.githubusercontent.com/sketsdever/deadpeople/master/vue_src/src/assets/star_icon.png',
-        iconSize: [30, 30],
-        iconAnchor: [15, 15],
-    });
+    // const notableIcon = L.icon({
+    //     iconUrl: 'https://raw.githubusercontent.com/sketsdever/deadpeople/master/vue_src/src/assets/star_icon.png',
+    //     iconSize: [30, 30],
+    //     iconAnchor: [15, 15],
+    // });
 
     let fetchAsync = this.fetchAsync;
     let showModal = this.showModal;
@@ -146,7 +146,8 @@ export default {
 
     await notables.forEach(async function(notable) {
       if (plots[notable.location - 1] == "EMPTY") {
-        let marker = L.marker(map.unproject([w*notable.X, h*notable.Y], pzoom), {icon: notableIcon}).addTo(map);
+        //let marker = L.marker(map.unproject([w*notable.X, h*notable.Y], pzoom), {icon: notableIcon}).addTo(map);
+        let marker = L.circleMarker(map.unproject([w*notable.X, h*notable.Y], pzoom), {radius: 7}).addTo(map);
         let button = document.createElement("button");
         let buttontext = document.createTextNode("Click to view plot details");
         button.appendChild(buttontext);
