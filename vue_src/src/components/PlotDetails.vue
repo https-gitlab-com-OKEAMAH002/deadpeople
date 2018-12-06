@@ -1,27 +1,9 @@
 <template>
     <div class="plotDetails">
-      <table border="1">
-        <th>
-          Object Id
-        </th>
-        <th>
-          Location
-        </th>
-        <th>
-          Type
-        </th>
-        <tr v-for="object in contents" :key="object.object_id">
-          <td>
-            {{ object.object_id }}
-          </td>
-          <td>
-            {{ object.location }}
-          </td>
-          <td>
-            {{ object.type }}
-          </td>
-        </tr>
-      </table>
+      <h2>Graves</h2>
+      <b-table striped hover :items="graves"></b-table>
+      <h2>Landmarks</h2>
+      <b-table striped hover :items="landmarks"></b-table>
     </div>
 </template>
 
@@ -29,11 +11,9 @@
 export default {
   name: 'PlotDetails',
   props: {
-    contents: [],
+    graves: [],
+    landmarks: [],
   },
-  mounted () {
-    console.log(this.contents); // TODO: Actually load the details.
-  }
 }
 </script>
 

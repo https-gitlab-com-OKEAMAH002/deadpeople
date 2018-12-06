@@ -11,7 +11,7 @@
   <b-modal ref="modalRef" @shown="modalShown" hide-footer size="lg">
     <b-container fluid>
       <div v-if="modalVisible">
-        <PlotDetails v-bind:contents="plotContents"/>
+        <PlotDetails v-bind:graves="graves" v-bind:landmarks="landmarks"/>
       </div>
     </b-container>
   </b-modal>
@@ -30,7 +30,8 @@ export default {
   data() {
     return {
       modalVisible: false,
-      plotContents: [],
+      graves: [],
+      landmarks: [],
     }
   },
   components: {
@@ -47,9 +48,11 @@ export default {
         }
     },
     async fetchNotables() {
-      let response = await this.fetchAsync(new URL("http://localhost:3000/db-view-objects"));
-      if (response != undefined) {
-        let notables = [];
+      let gravesResponse = await this.fetchAsync(new URL("http://localhost:3000/db-view-graves"));
+      let landmarksResponse = await this.fetchAsync(new URL("http://localhost:3000/db-view-landmarks"));
+      if (gravesResponse != undefined && landmarksResponse != undefined) {
+        let notableGraves = [];
+        let notableLandmarks = [];
         let locations = [];
         let locationResponse = await this.fetchAsync(new URL("http://localhost:3000/db-fetch-locations"));
         if (locationResponse != undefined) {
@@ -60,16 +63,34 @@ export default {
             });
           });
         }
-        response.forEach(result => {
-          notables.push({
-              id: result.object_id,
-              type: result.type,
-              location: result.location,
-              X: locations[result.location - 1].X,
-              Y: locations[result.location - 1].Y,
+        gravesResponse.forEach(result => {
+          notableGraves.push({
+            type: "grave",
+            id: result.object_id,
+            last_name: result.last_name,
+            first_name: result.first_name,
+            middle_name: result.middle_name,
+            date_of_birth: result.date_of_birth,
+            date_of_death: result.date_of_death,
+            date_of_burrial: result.date_of_burrial,
+            is_notable: result.is_notable,
+            location: result.location,
+            X: locations[result.location - 1].X,
+            Y: locations[result.location - 1].Y,
           });
         });
-        return notables;
+        landmarksResponse.forEach(result => {
+          notableLandmarks.push({
+            type: "landmark",
+            id: result.object_id,
+            description: result.description,
+            has_photos: result.has_photos,
+            location: result.location,
+            X: locations[result.location - 1].X,
+            Y: locations[result.location - 1].Y,
+          });
+        });
+        return [notableGraves, notableLandmarks];
       }
     },
     showModal() {
@@ -81,12 +102,22 @@ export default {
     modalHidden: function() {
       this.modalVisible = false;
     },
-    setPlotContents: function(contents) {
-      this.plotContents = contents;
+    setPlotContents: async function(plotContents) {
+      plotContents.forEach(item => {
+        if (item.type == "grave") {
+          this.graves.push(item);
+        } else if (item.type == "landmark") {
+          this.landmarks.push(item);
+        }
+      })
+    },
+    resetPlotContents: function() {
+      this.graves = [];
+      this.landmarks = [];
     }
   },
   async mounted () {
-    let notables = await this.fetchNotables();
+    let [notableGraves, notableLandmarks] = await this.fetchNotables();
     let plots = [];
     for (let i = 0; i < 1049; i++) {
       plots.push("EMPTY");
@@ -117,36 +148,35 @@ export default {
     L.imageOverlay(url, bounds).addTo(map);
     // tell leaflet that the map is exactly as big as the image
     map.setMaxBounds(bounds);
-    // icons
-    // const notableIcon = L.icon({
-    //     iconUrl: 'https://raw.githubusercontent.com/sketsdever/deadpeople/master/vue_src/src/assets/star_icon.png',
-    //     iconSize: [30, 30],
-    //     iconAnchor: [15, 15],
-    // });
 
     let fetchAsync = this.fetchAsync;
     let showModal = this.showModal;
     let setPlotContents = this.setPlotContents;
+    let resetPlotContents = this.resetPlotContents;
+    let nextTick = this.$nextTick;
+    let root = this.$root;
 
     async function onClickPlot(plotNumber) {
-      console.log("clicked plot! plotNumber: ", plotNumber);
-      await plots[plotNumber - 1].forEach(async function(notable) {
-        let url = new URL("http://localhost:3000/db-fetch-object-for-id");
-        let params = {
-          id: notable.id,
-        }
-        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-        let response = await fetchAsync(url);
-        console.log(response);
-        setPlotContents(response);
-        // TODO: Put information from this object in a modal :) Will also want to specifically query Graves table.
-      });
+      resetPlotContents();
+      setPlotContents(plots[plotNumber - 1]);
       showModal();
     }
 
-    await notables.forEach(async function(notable) {
+    await notableGraves.forEach(async function(notable) {
       if (plots[notable.location - 1] == "EMPTY") {
-        //let marker = L.marker(map.unproject([w*notable.X, h*notable.Y], pzoom), {icon: notableIcon}).addTo(map);
+        let marker = L.circleMarker(map.unproject([w*notable.X, h*notable.Y], pzoom), {radius: 7}).addTo(map);
+        let button = document.createElement("button");
+        let buttontext = document.createTextNode("Click to view plot details");
+        button.appendChild(buttontext);
+        marker.bindPopup(button);
+        button.addEventListener("click", async function() { await onClickPlot(notable.location); });
+        plots[notable.location - 1] = [];
+      }
+      plots[notable.location - 1].push(notable);
+    });
+
+    await notableLandmarks.forEach(async function(notable) {
+      if (plots[notable.location - 1] == "EMPTY") {
         let marker = L.circleMarker(map.unproject([w*notable.X, h*notable.Y], pzoom), {radius: 7}).addTo(map);
         let button = document.createElement("button");
         let buttontext = document.createTextNode("Click to view plot details");

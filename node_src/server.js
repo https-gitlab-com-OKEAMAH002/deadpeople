@@ -198,6 +198,35 @@ app.get('/db-view-objects', async (req, res) => {
     }
 });
 
+app.get('/db-view-graves', async (req, res) => {
+	try {
+		const client = await pool.connect();
+		let query = await client.query('SELECT * FROM graves;');
+		query = await client.query('SELECT * FROM graves JOIN objects ON graves.object_id=objects.object_id;');
+		client.release();
+		if (query.rows != undefined) {
+			res.send(query.rows);
+		}
+    } catch (err) {
+      console.error(err);
+      res.send("Error " + err);
+    }
+});
+
+app.get('/db-view-landmarks', async (req, res) => {
+	try {
+		const client = await pool.connect();
+		let query = await client.query('SELECT * FROM landmarks JOIN objects ON landmarks.object_id=objects.object_id;;');
+		client.release();
+		if (query.rows != undefined) {
+			res.send(query.rows);
+		}
+    } catch (err) {
+      console.error(err);
+      res.send("Error " + err);
+    }
+});
+
 app.get('/db-delete-object', async (req, res) => {
 	try {
 		const client = await pool.connect();
