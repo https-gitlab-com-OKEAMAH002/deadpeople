@@ -72,7 +72,7 @@ export default {
             middle_name: result.middle_name,
             date_of_birth: result.date_of_birth,
             date_of_death: result.date_of_death,
-            date_of_burrial: result.date_of_burrial,
+            date_of_burial: result.date_of_burrial,
             is_notable: result.is_notable,
             location: result.location,
             X: locations[result.location - 1].X,
@@ -166,7 +166,8 @@ export default {
       if (plots[notable.location - 1] == "EMPTY") {
         let marker = L.circleMarker(map.unproject([w*notable.X, h*notable.Y], pzoom), {radius: 7}).addTo(map);
         let button = document.createElement("button");
-        let buttontext = document.createTextNode("Click to view plot details");
+        let str = "Plot " + String(notable.location) + ": Click to view details";
+        let buttontext = document.createTextNode(str);
         button.appendChild(buttontext);
         marker.bindPopup(button);
         button.addEventListener("click", async function() { await onClickPlot(notable.location); });
@@ -179,7 +180,8 @@ export default {
       if (plots[notable.location - 1] == "EMPTY") {
         let marker = L.circleMarker(map.unproject([w*notable.X, h*notable.Y], pzoom), {radius: 7}).addTo(map);
         let button = document.createElement("button");
-        let buttontext = document.createTextNode("Click to view plot details");
+        let str = "Plot " + String(notable.location) + ": Click to view details";
+        let buttontext = document.createTextNode(str);
         button.appendChild(buttontext);
         marker.bindPopup(button);
         button.addEventListener("click", async function() { await onClickPlot(notable.location); });

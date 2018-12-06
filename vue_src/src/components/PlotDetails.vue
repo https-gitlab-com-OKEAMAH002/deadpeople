@@ -1,9 +1,10 @@
 <template>
     <div class="plotDetails">
       <h2>Graves</h2>
-      <b-table striped hover :items="graves"></b-table>
+      <b-table striped hover :items="graves" :fields="graveFields"></b-table>
+      <v-for
       <h2>Landmarks</h2>
-      <b-table striped hover :items="landmarks"></b-table>
+      <b-table striped hover :items="landmarks" :fields="landmarkFields"></b-table>
     </div>
 </template>
 
@@ -14,6 +15,13 @@ export default {
     graves: [],
     landmarks: [],
   },
+  data () {
+    return {
+      graveFields: ["location", "id", "first_name", "middle_name", "last_name",
+                    "date_of_birth", "date_of_death", "date_of_burial"],
+      landmarkFields: ["location", "id", "description", "has_photos"],
+    }
+  }
 }
 </script>
 
