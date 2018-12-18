@@ -48,13 +48,13 @@ export default {
         }
     },
     async fetchNotables() {
-      let gravesResponse = await this.fetchAsync(new URL("http://deadpeople.herokuapp.com/db-view-graves"));
-      let landmarksResponse = await this.fetchAsync(new URL("http://deadpeople.herokuapp.com/db-view-landmarks"));
+      let gravesResponse = await this.fetchAsync(new URL("http://localhost:3000/db-view-graves"));
+      let landmarksResponse = await this.fetchAsync(new URL("http://localhost:3000/db-view-landmarks"));
       if (gravesResponse != undefined && landmarksResponse != undefined) {
         let notableGraves = [];
         let notableLandmarks = [];
         let locations = [];
-        let locationResponse = await this.fetchAsync(new URL("http://deadpeople.herokuapp.com/db-fetch-locations"));
+        let locationResponse = await this.fetchAsync(new URL("http://localhost:3000/db-fetch-locations"));
         if (locationResponse != undefined) {
           locationResponse.forEach(locationResult => {
             locations.push({
